@@ -1,0 +1,51 @@
+#Sabastian Mandell
+#Sep 22, 2026
+import numpy as np
+import cv2
+import matplotlib.pyplot as plt
+
+
+
+#pull image from file/path assign variable/ container
+img1 = cv2.imread('flowers.jpg')
+#print(img1)
+
+
+#cv2 is buggy as hell on my Mac so i have to use extra code and you need to hit keys in between display windows.
+cv2.imshow('test', img1)
+cv2.waitKey(0)
+cv2.destroyWindow('test')
+
+
+#Average method
+#call each channel and divide by 3 to avoid overflow ever and THEN sum)
+#originally had floats so use integer division.
+greyed_out1 = (img1[:,:,0]//3) + (img1[:,:,1]//3) + (img1[:,:,2]//3)
+
+
+#Average Method display
+cv2.imshow('av_grey test', greyed_out1)
+cv2.waitKey(0)
+cv2.destroyWindow('av_grey test')
+
+#print(greyed_out1) #test block to find if comiling good values not floats
+#Human Eye NTSC ratios
+
+#same as before only this time we multiple the various pigment channels by the ratios
+imgNTSC = ((img1[:,:,0] * .114)//1 + (img1[:,:,1] * .587)//1 + (img1[:,:,2] * .299)//1).astype(np.uint8)
+
+
+cv2.imshow('NTSC', imgNTSC)
+cv2.waitKey(0)
+cv2.destroyWindow('NTSC')
+
+
+#compare results with IM_GRAYSCAE read
+compare = cv2.imread('flowers.jpg', cv2.IMREAD_GRAYSCALE)
+
+if compare.all() == imgNTSC.all():
+    print("yes")
+if compare.all() == greyed_out1.all():
+    print("and this one too")
+
+

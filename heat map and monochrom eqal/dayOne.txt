@@ -1,0 +1,2 @@
+Python 3.14.7 | packaged by Anaconda, Inc. | (main, Aug 14 2026, 10:13:42) [Clang 20.1.8 ] on darwin
+Enter "help" below or click "Help" above for more information.

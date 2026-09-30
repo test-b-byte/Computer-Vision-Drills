@@ -1,0 +1,99 @@
+
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+img = cv2.imread("fenway.png", 1)
+
+#find size
+rowCount = img.shape[0]
+colCount = img.shape[1]
+constant = colCount * rowCount
+
+#use greyscale as a proxy for brightness
+brighten = ((img[:,:,0]//3)+ (img[:,:,1]//3) + (img[:,:,2]//3))
+
+#prepare need t het max, mins and avs
+dar = 256
+lit = 0
+ave = int(0)
+
+for x in range(rowCount):
+    for y in range(colCount):
+        if brighten[x][y] <= dar:
+            dar = brighten[x][y]
+        if brighten[x][y] >= lit:
+            lit = brighten[x][y]
+        ave += int(brighten[x][y])
+
+ave = ave // constant
+print("darkest is " + str(dar) + "\nlightest is " + str(lit) + "\naverage is " + str(ave) + "\n")       
+# darkest is 0 -> blue
+# lightest is 211 -> red
+# average is 90 -> green 
+
+#trying a 40-20-40 split to match exmaple image green .1, red takes ove,r blue takes under
+greenP = int(.1 * (lit-dar))
+redP = ave + greenP
+blueP = ave - greenP
+
+thermalImg = img.copy()
+for x in range(rowCount):
+    for y in range(colCount):
+        if brighten[x][y] >= redP:
+            thermalImg[x][y][0] = 0
+            thermalImg[x][y][1] = 0
+            thermalImg[x][y][2] = 255
+        elif brighten[x][y] <= blueP:
+            thermalImg[x][y][0] = 255
+            thermalImg[x][y][1] = 0
+            thermalImg[x][y][2] = 0
+        else:
+            thermalImg[x][y][0] = 127
+            thermalImg[x][y][1] = 255
+            thermalImg[x][y][2] = 127
+
+cv2.imshow('display test', thermalImg)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+# ^ this all works, but I want to go further
+#doing linear interpolation, becuase im interested in it and working with a tutor-mode LLM
+lerpImg = img.copy()
+#first we dark values. 0-mid point, for us its 90.
+#find brihghtness ratios for dark-mid, then conver each triplet in the grid by that ratio
+for x in range(rowCount):
+    for y in range(colCount):
+        #use pixel brightness to find ratio
+        pB = int(brighten[x][y])
+        if pB < ave:
+            ratio = (pB -dar) / (ave-dar)
+
+                 #formual is start + (ratio * end-start to get new triplet values
+            COLD = 255 + (ratio * (127 - 255))
+            MILD = 0 + ratio * (255 - 0)
+            WARM = 0 + (ratio * (127 - 0))
+        # no for value between ave and red
+        else:
+            ratio = (pB - ave) / (lit -ave)
+                    #start  + ratio * end - start
+            COLD = 127 + (ratio * (0 - 127))
+            MILD = 255 + (ratio * (0 - 255))
+            WARM = 127 + (ratio * (255- 127))
+
+        lerpImg[x][y][0] = int(COLD)
+        lerpImg[x][y][1] = int(MILD) 
+        lerpImg[x][y][2] = int(WARM) 
+                 
+
+
+
+cv2.imshow('display test', thermalImg)
+cv2.imshow('interpolatied', lerpImg)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+#basic three buckets version i made up here, but wasnt sure if it
+#it was suppsoed to make a narrow band fort hose slight yellows and stuff, so looke
+

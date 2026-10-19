@@ -5,10 +5,8 @@ Edge Detection
 ![Working Ground](edge_detection_b.png)
 
 
-![Raising House](edge_detection_b.png)
+![Raising House](edge_detection_h.png)
 
-
-![Thermal buckets vs linear interpolation](T_vs_Lerp.png)
 
 
 Linear Interpolation

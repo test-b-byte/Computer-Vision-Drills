@@ -13,3 +13,9 @@ Linear Interpolation
 
 
 ![Thermal buckets vs linear interpolation](T_vs_Lerp.png)
+
+
+Hi Low Pass Filter
+
+![Blended But not great matches](Hi_Low_Merge.png)
+

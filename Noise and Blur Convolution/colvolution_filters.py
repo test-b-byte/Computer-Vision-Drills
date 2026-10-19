@@ -126,12 +126,12 @@ final9={"1% Noise": grey1, "10% Noise": grey10, "50% Noise": grey50, "3x3 Filter
 
 i = 0
 for title, img in final9.items():
-    ply.subplots(3, 3, i+1
+    ply.subplots(3, 3, i+1)
     ply.imshow(img, cmap='gray')
     ply.title(title)
     i +=1
 
-ply.show)
+ply.show()
 
 '''
 references
